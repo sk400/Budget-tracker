@@ -8,13 +8,14 @@ const remainingBudget = document.getElementById("remaining-budget");
  * It calculates the total expense count and remaining budget count.
  * It then updates the displayed values of total expenses and remaining budget.
  */
-const updateSummary = () => {
+
+const getTotalExpenses = () => {
   // Get all the children of the expensesContainer
   const expenseItems = [...expensesContainer.children];
 
   // Reduce the expense items to a single value (the total expense count)
   // For each expense item, add the value of the second input field to the accumulator
-  const totalExpenseCount = expenseItems.reduce(
+  let totalExpenseCount = expenseItems.reduce(
     (accumulator, currentExpense) => {
       // Get the second child of the current expense item (the input field for the amount)
       const amountInput = currentExpense.children[0].children[1];
@@ -26,7 +27,16 @@ const updateSummary = () => {
     0
   );
 
+  return totalExpenseCount;
+};
+
+const updateSummary = () => {
+  let totalExpenseCount = getTotalExpenses();
+
   // Calculate the remaining budget count by subtracting the total expense count from the budget input value
+
+  if (!totalExpenseCount) totalExpenseCount = 0;
+
   const remainingBudgetCount = budgetInput.value - totalExpenseCount;
 
   // Update the displayed value of total expenses
@@ -124,11 +134,15 @@ const setItems = (items) => {
 // Update summary when budget changes
 
 budgetInput.addEventListener("keyup", (event) => {
-  if ([...expensesContainer.children].length) {
-    localStorage.setItem("budget", event.target.value);
-    console.log(event.target.value);
-    updateSummary();
+  localStorage.setItem("budget", JSON.stringify(event.target.value));
+  const totalExpenseCount = getTotalExpenses();
+
+  if (budgetInput.value < totalExpenseCount) {
+    alert("Budget cannot be less than total expenses");
+    return;
   }
+
+  updateSummary();
 });
 
 // Delete expense
@@ -261,7 +275,7 @@ window.onload = () => {
 
   // Set the budget input to the value from local storage
   if (budgetAmount) {
-    budgetInput.value = budgetAmount;
+    budgetInput.value = JSON.parse(budgetAmount);
 
     // Update the summary
     updateSummary();
