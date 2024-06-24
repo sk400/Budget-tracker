@@ -10,7 +10,7 @@ This is a budget tracker application built using HTML, CSS, and JavaScript. The 
 - Update summary based on budget and expenses
 
 ## How to Use
-1. Clone the repository to your local machine.
+1. Clone the repository to your local machine or click the link in the about section.
 2. Open the `index.html` file in a web browser.
 3. Add expenses by filling in the expense name and amount fields.
 4. Edit expense details by clicking the "Edit" button.
